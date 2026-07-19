@@ -587,7 +587,7 @@
 <a href=#587 id=587 data-nosnippet>587</a>            <span class="kw">let </span><span class="kw-2">mut </span>vec = <span class="macro">vec!</span>[op];
 <a href=#588 id=588 data-nosnippet>588</a>            <span class="kw">for </span>child <span class="kw">in </span>node.children().iter().map(|i| usize::from(<span class="kw-2">*</span>i)) {
 <a href=#589 id=589 data-nosnippet>589</a>                vec.push(<span class="kw">if let </span><span class="prelude-val">Some</span>(s) = f(child) {
-<a href=#590 id=590 data-nosnippet>590</a>                    <span class="kw">return </span>Sexp::String(s);
+<a href=#590 id=590 data-nosnippet>590</a>                    Sexp::String(s)
 <a href=#591 id=591 data-nosnippet>591</a>                } <span class="kw">else if </span>child &lt; i {
 <a href=#592 id=592 data-nosnippet>592</a>                    <span class="self">self</span>.to_sexp_rec(child, f)
 <a href=#593 id=593 data-nosnippet>593</a>                } <span class="kw">else </span>{
