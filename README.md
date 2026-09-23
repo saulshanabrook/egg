@@ -37,6 +37,49 @@ egg = "0.11.0"
 
 Make sure to compile with `--release` if you are measuring performance!
 
+### Clock selection
+
+The default `quanta` feature uses [Quanta](https://docs.rs/quanta/) for timing.
+Its first clock read can spend up to 200 ms calibrating in each process, in
+exchange for potentially cheaper subsequent reads. It can suit long-running
+applications that read the clock frequently. For short-lived applications,
+`std::time::Instant` avoids Quanta's calibration, but clock reads may cost more.
+Both clocks support runner time limits and timing reports; benchmark your
+platform and workload to choose between them.
+
+In your existing `[dependencies.egg]` entry, keep the `version`, `git`, or `path`
+setting and choose one of these feature configurations. To use Quanta explicitly:
+
+```toml
+[dependencies.egg]
+# Keep your existing dependency source here.
+default-features = false
+features = ["quanta"] # also enables std
+```
+
+To use the standard-library clock:
+
+```toml
+[dependencies.egg]
+# Keep your existing dependency source here.
+default-features = false
+features = ["std"]
+```
+
+Keep any other features you need in the same list, such as `"deterministic"` or
+`"serde-1"`. Leaving default features enabled also selects Quanta. These clock
+options require a revision containing this feature; the published 0.11.0 release
+does not provide them.
+
+Cargo combines features requested by all dependencies, so another dependency
+enabling `egg`'s defaults or `quanta` feature will select Quanta again. Check the
+resolved features with `cargo tree -e features -i egg`.
+
+Browser WebAssembly needs Quanta for timing; the `wasm-bindgen` feature selects it.
+The standard-library clock is unsupported on `wasm32-unknown-unknown`.
+Without `std`, the existing no-op clock still disables time limits and reports
+zero elapsed time.
+
 ## Developing
 
 It's written in [Rust](https://www.rust-lang.org/).
